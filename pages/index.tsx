@@ -1,6 +1,5 @@
+import MainPresenter from "../src/components/units/main";
 
 export default function MainPage(): JSX.Element {
-  return (
-    <div>메인 페이지입니다.</div>
-  )
+  return <MainPresenter />;
 }

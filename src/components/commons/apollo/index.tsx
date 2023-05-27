@@ -7,7 +7,10 @@ import {
 } from "@apollo/client";
 import { createUploadLink } from "apollo-upload-client";
 import { useRecoilState, useRecoilValueLoadable } from "recoil";
-import { accessTokenState, restoreAccessTokenLoadable } from "../../../commons/stores";
+import {
+  accessTokenState,
+  restoreAccessTokenLoadable
+} from "../../../commons/stores";
 import { useEffect } from "react";
 import { onError } from "@apollo/client/link/error";
 import { getAccessToken } from "../../../commons/libraries/getAccessToken";
@@ -31,9 +34,10 @@ export default function ApolloSetting(props: IApolloSettingProps): JSX.Element {
   }, []);
 
   const uploadLink = createUploadLink({
-    uri: "https://backend-practice.codebootcamp.co.kr/graphql",
+    uri: "https://doumdattgi-server.com/graphql",
     headers: {
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`,
+      "X-Apollo-Operation-Name": "true"
     },
     credentials: "include"
   });
@@ -44,7 +48,7 @@ export default function ApolloSetting(props: IApolloSettingProps): JSX.Element {
         if (err.extensions.code === "UNAUTHENTICATED") {
           return fromPromise(
             getAccessToken().then(newAccessToken => {
-              setAccessToken(newAccessToken);
+              setAccessToken(newAccessToken ?? "");
               operation.setContext({
                 headers: {
                   ...operation.getContext().headers,
@@ -59,7 +63,7 @@ export default function ApolloSetting(props: IApolloSettingProps): JSX.Element {
   });
 
   const client = new ApolloClient({
-    uri: "https://backend-practice.codebootcamp.co.kr/graphql",
+    uri: "https://doumdattgi-server.com/graphql",
     cache: GLOBAL_STATE,
     link: ApolloLink.from([errorLink, uploadLink])
   });
